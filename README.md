@@ -34,16 +34,14 @@ You will then get a response back that looks like this:
 {
     "success": true,
     "message": "Prediction made successfully!",
-    "data": {
-        "Prediction": [
-            {
-                "open": 195.88857391119,
-                "high": 199.58108438014983,
-                "low": 194.35781569004058,
-                "close": 194.35781569004058
-            }
-        ]
-    }
+    "data": [
+        {
+            "open": 196.95269326686858,
+            "high": 200.28645069122314,
+            "low": 195.04503690719602,
+            "close": 195.04503690719602
+        }
+    ]
 }
 
 ```

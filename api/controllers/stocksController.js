@@ -30,7 +30,7 @@ exports.get_stock_prediction = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Prediction made successfully!',
-      data: { Prediction: prediction },
+      data: prediction,
     });
   } else {
     res.status(404).json({
