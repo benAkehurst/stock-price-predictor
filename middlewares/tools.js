@@ -1,4 +1,4 @@
-exports.dataConverter = (rawData) => {
+exports.dataConverter = async (rawData) => {
   // Extract only stock data
   const timeSeriesData = rawData['Time Series (Daily)'];
   // make array only stock price data
