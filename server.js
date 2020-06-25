@@ -57,7 +57,9 @@ app.use(cors());
 
 // Routes Definitions
 const authRoutes = require('./api/routes/authRoutes');
+const stocksRoutes = require('./api/routes/stocksRoutes');
 authRoutes(app);
+stocksRoutes(app);
 
 // 404 Handling
 app.use((req, res) => {
