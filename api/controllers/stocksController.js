@@ -1,5 +1,6 @@
 'use strict';
 const mongoose = require('mongoose');
+const Stock = mongoose.model('Stock');
 const fetch = require('node-fetch');
 const predictors = require('../../middlewares/predictors');
 const tools = require('../../middlewares/tools');
@@ -27,6 +28,13 @@ exports.get_stock_prediction = async (req, res) => {
   const prediction = await predictors.makePrediction(convertedData);
   // Response Handler
   if (prediction) {
+    // Save response to DB
+    let response = new Stock({
+      stockSymbol: stock,
+      data: prediction,
+    });
+    response.save();
+    // Send response to user
     res.status(200).json({
       success: true,
       message: 'Prediction made successfully!',

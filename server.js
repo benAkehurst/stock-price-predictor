@@ -7,34 +7,35 @@ const cors = require('cors');
 
 // Models Imports
 const User = require('./api/models/userModel');
+const Stock = require('./api/models/stockModel');
 
 // Init Express
 const app = express();
 require('dotenv').config();
 
 // DB Connection
-// mongoose.Promise = global.Promise;
-// mongoose.connect(
-//   // `mongodb://${process.env.DB_CONNECT}`,
-//   `mongodb://localhost:27017/default_db`,
-//   {
-//     useNewUrlParser: true,
-//     useFindAndModify: false,
-//     useCreateIndex: true,
-//     useUnifiedTopology: true,
-//   },
-//   (e) => {
-//     if (e) {
-//       const dbError = {
-//         error: e,
-//         msg: 'Error Connecting to Database. Please check MongoDB is running',
-//       };
-//       console.log(dbError);
-//     } else {
-//       console.log('Connected to Database');
-//     }
-//   }
-// );
+mongoose.Promise = global.Promise;
+mongoose.connect(
+  // `mongodb://${process.env.DB_CONNECT}`,
+  `mongodb://localhost:27017/stock_prices_db`,
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+  },
+  (e) => {
+    if (e) {
+      const dbError = {
+        error: e,
+        msg: 'Error Connecting to Database. Please check MongoDB is running',
+      };
+      console.log(dbError);
+    } else {
+      console.log('Connected to Database');
+    }
+  }
+);
 
 // Server Config
 app.use(bodyParser.urlencoded({ extended: true }));
