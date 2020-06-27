@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  main.explainer.container
+    h1 #{pageTitle}
+    p #{message1}
+    p #{message2}
+    p #{message3}
+    p #{message4}
+    ul
+      each symbol, i in exampleSymbols
+        li #{symbol.symbol} - #{symbol.company}
+  div.stockForm.container
+    input.symbolInput(type="text" name="stockSymbol" placeholder="Enter Stock Symbol" id="stockSymbolInput")
+    button.submitButton.btn-primary#submitButton='Submit'
+  section.explainer.container#resultsSection
+    div#loader
+      div.lds-ellipsis
+        div
+        div
+        div
+        div
+      p=`We're fetching your prediction!`
+      p='Time Taken:'
+      span#minutes
+      span#seconds
+    div#results    
+      p#resultsWrapper= 'results'
