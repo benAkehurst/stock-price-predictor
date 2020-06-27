@@ -4,6 +4,7 @@ const http = require('http');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 // Models Imports
 const User = require('./api/models/userModel');
@@ -61,6 +62,36 @@ const authRoutes = require('./api/routes/authRoutes');
 const stocksRoutes = require('./api/routes/stocksRoutes');
 authRoutes(app);
 stocksRoutes(app);
+
+// Load View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'pug');
+app.get('/', (req, res) => {
+  let exampleSymbols = [
+    {
+      symbol: 'AAPL',
+      company: 'Apple',
+    },
+    {
+      symbol: 'MSFT',
+      company: 'Microsoft',
+    },
+    {
+      symbol: 'AMZN',
+      company: 'Amazon',
+    },
+  ];
+  res.render('index', {
+    pageTitle: 'Stock Price Predictor',
+    message1: `Using machine learning we're going to try and predict tomorrows stock price for a chosen company`,
+    message2:
+      'All you need to do is enter a valid stock symbol below and wait for about 40 - 50 seconds',
+    message3: 'Then you should see a prediction of tomorrows price',
+    message4: 'Why not try one of the examples bellow:',
+    exampleSymbols: exampleSymbols,
+  });
+});
 
 // 404 Handling
 app.use((req, res) => {
