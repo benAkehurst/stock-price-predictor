@@ -4,6 +4,10 @@ A project to start learning about machine learning in Javascript. Utilizing the 
 
 The aim of the server will take a stock symbol, pull the last 100 days of stock data from Alphavantage then make a prediction on what the stock price will be today!
 
+## Prerequisites
+
+- A MongoDB instance running
+
 ## Getting Started
 
 - Clone the repo
@@ -16,6 +20,8 @@ ALPHA_VANTAGE_KEY=<API key from Alphavantage>
 ```
 
 - `npm run start` in the terminal to get the project running on port:8080
+
+- Then visit `http://localhost:8080/` in your browser to access the app
 
 ## Calling the API
 
