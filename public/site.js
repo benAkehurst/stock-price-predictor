@@ -5,15 +5,31 @@ const resultsSection = document.querySelector('#resultsSection');
 const loaderDiv = document.querySelector('#loader');
 const resultsDiv = document.querySelector('#results');
 const resultsWrapper = document.querySelector('#resultsWrapper');
+const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
+const autoCompleteOption = document.createElement('div');
+const singleStockOption = document.querySelector('.singleStockOption');
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
+const AUTOCOMPLETE_URL =
+  'http://localhost:8080/api/stocks/get-autocomplete-values/';
 
 // Set submit button to disabled on init
 submitButton.disabled = true;
 
-// Listener for adding text to input field
+// Listener for adding text to input field - calls autocomplete method
 stockSymbolInput.addEventListener('keyup', (e) => {
-  checkForInputValue();
+  if (e.keyCode === 8 || e.keyCode === 46) {
+    clearAutoComplete();
+  } else {
+    checkForInputValue();
+    autoCompleteHandler(e);
+  }
 });
+
+autoCompleteHandler = async (event) => {
+  let inputValue = event.target.value;
+  const reqUrl = `${AUTOCOMPLETE_URL}${inputValue}`;
+  getAutocompleteValues(reqUrl);
+};
 
 // Changes button disabled if text in input field
 checkForInputValue = () => {
@@ -42,6 +58,18 @@ getRequestHandler = async (url) => {
       return { error: error, message: 'Failed to get prediction' };
     });
   showResultsDisplay(request);
+};
+
+// Get Autocomplete options handler
+getAutocompleteValues = async (url) => {
+  let request = await fetch(url, { method: 'GET' })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return { error: error, message: 'Failed to get autocomplete options' };
+    });
+  showAutoCompleteOptions(request);
 };
 
 // Loader Handlers
@@ -80,3 +108,46 @@ showResultsDisplay = (requestedData) => {
     `;
   }
 };
+
+// Shows options for autocomplete
+showAutoCompleteOptions = (responseData) => {
+  const autoCompleteData = responseData;
+  if (!autoCompleteData.success) {
+    return;
+  } else {
+    autoCompleteWrapper.style.display = 'block';
+    // make list dynamically
+    if (autoCompleteWrapper.childNodes.length > 0) {
+      autoCompleteWrapper.innerHTML = '';
+      autoCompleteData.data.forEach((item) => {
+        let singleOption = document.createElement('div');
+        singleOption.className = 'singleStockOption';
+        singleOption.innerText = `Name: ${item.name} | Stock Symbol - ${item.symbol}`;
+        autoCompleteWrapper.appendChild(singleOption);
+      });
+    } else {
+      autoCompleteData.data.forEach((item) => {
+        let singleOption = document.createElement('div');
+        singleOption.className = 'singleStockOption';
+        singleOption.innerText = `Name: ${item.name} | Stock Symbol - ${item.symbol}`;
+        autoCompleteWrapper.appendChild(singleOption);
+      });
+    }
+  }
+};
+
+// Clears auto complete
+clearAutoComplete = () => {
+  autoCompleteWrapper.innerHTML = '';
+  autoCompleteWrapper.style.display = 'none';
+};
+
+// Get stock symbol when clicking on autocomplete option
+document.body.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (e.srcElement.className === 'singleStockOption') {
+    stockSymbolInput.value = e.srcElement.innerText.split('-')[1].trim();
+  } else {
+    autoCompleteWrapper.style.display = 'none';
+  }
+});

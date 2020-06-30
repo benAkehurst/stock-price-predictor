@@ -4,4 +4,8 @@ module.exports = (app) => {
   app
     .route('/api/stocks/get-stock-prediction/:stock')
     .get(stocksController.get_stock_prediction);
+
+  app
+    .route('/api/stocks/get-autocomplete-values/:searchValue')
+    .get(stocksController.get_autocomplete_options);
 };

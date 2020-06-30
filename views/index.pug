@@ -12,6 +12,8 @@ block content
         li #{symbol.symbol} - #{symbol.company}
   div.stockForm.container
     input.symbolInput(type="text" name="stockSymbol" placeholder="Enter Stock Symbol" id="stockSymbolInput")
+    div#autoCompleteWrapper
+      div.singleStockOption
     button.submitButton.btn-primary#submitButton='Submit'
   section.explainer.container#resultsSection
     div#loader

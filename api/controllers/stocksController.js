@@ -48,3 +48,36 @@ exports.get_stock_prediction = async (req, res) => {
     });
   }
 };
+
+/**
+ * Gets auto complete options
+ * GET
+ * param: searchValue
+ */
+exports.get_autocomplete_options = async (req, res) => {
+  const searchValue = req.params.searchValue;
+
+  // Fetches Raw Stock Data
+  const rawData = await fetch(
+    `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchValue}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    });
+
+  const convertedData = await tools.autoCompleteConverter(rawData);
+  if (convertedData.length > 0) {
+    res.status(200).json({
+      success: true,
+      message: 'Autocomplete success',
+      data: convertedData,
+    });
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Autocomplete failed',
+      data: null,
+    });
+  }
+};
