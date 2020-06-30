@@ -49,6 +49,14 @@ body {
   opacity: 0.5;
 }
 
+#autoCompleteWrapper {
+  width: 65%;
+  height: 15rem;
+  margin: -7px 0 1rem 0;
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
 #loader,
 #results {
   display: none;
