@@ -30,3 +30,13 @@ exports.dataConverter = async (rawData) => {
   });
   return convertedValues;
 };
+
+exports.autoCompleteConverter = async (rawData) => {
+  const convertedKeys = rawData.bestMatches.map(
+    ({ '1. symbol': symbol, '2. name': name }) => ({
+      symbol,
+      name,
+    })
+  );
+  return convertedKeys;
+};
