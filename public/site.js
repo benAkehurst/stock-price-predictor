@@ -1,3 +1,5 @@
+const { response } = require('express');
+
 // Document Elements
 const stockSymbolInput = document.querySelector('#stockSymbolInput');
 const submitButton = document.querySelector('#submitButton');
@@ -5,15 +7,25 @@ const resultsSection = document.querySelector('#resultsSection');
 const loaderDiv = document.querySelector('#loader');
 const resultsDiv = document.querySelector('#results');
 const resultsWrapper = document.querySelector('#resultsWrapper');
+const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
+const AUTOCOMPLETE_URL =
+  'http://localhost:8080/api/stocks/get-autocomplete-values/';
 
 // Set submit button to disabled on init
 submitButton.disabled = true;
 
-// Listener for adding text to input field
+// Listener for adding text to input field - calls autocomplete method
 stockSymbolInput.addEventListener('keyup', (e) => {
   checkForInputValue();
+  autoCompleteHandler(e);
 });
+
+autoCompleteHandler = async (event) => {
+  let inputValue = event.target.value;
+  const reqUrl = `${AUTOCOMPLETE_URL}${inputValue}`;
+  getAutocompleteValues(reqUrl);
+};
 
 // Changes button disabled if text in input field
 checkForInputValue = () => {
@@ -42,6 +54,18 @@ getRequestHandler = async (url) => {
       return { error: error, message: 'Failed to get prediction' };
     });
   showResultsDisplay(request);
+};
+
+// Get Autocomplete options handler
+getAutocompleteValues = async (url) => {
+  let request = await fetch(url, { method: 'GET' })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return { error: error, message: 'Failed to get autocomplete options' };
+    });
+  showAutoCompleteOptions(request);
 };
 
 // Loader Handlers
@@ -78,5 +102,27 @@ showResultsDisplay = (requestedData) => {
       Low: ${requestedData.data[0].low.toFixed(2)}
       Close: ${requestedData.data[0].close.toFixed(2)}
     `;
+  }
+};
+
+showAutoCompleteOptions = (responseData) => {
+  const autoCompleteData = responseData;
+  if (!autoCompleteData.success) {
+    return;
+  } else {
+    // make list dynamically
+    // overwrite current list
+    // click on symbol makes that the option
+    /**
+     * convertedKeys.map((item) => {
+//       const option = document.createElement('div');
+//       option.innerText = item.name;
+//       huge_list.appendChild(option);
+//       if (huge_list.childNodes.length > 0) {
+//         huge_list.removeChild(option);
+//       }
+//       huge_list.appendChild(option);
+//     });
+     */
   }
 };
