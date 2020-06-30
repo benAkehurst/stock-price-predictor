@@ -1,5 +1,3 @@
-const { response } = require('express');
-
 // Document Elements
 const stockSymbolInput = document.querySelector('#stockSymbolInput');
 const submitButton = document.querySelector('#submitButton');
@@ -8,6 +6,8 @@ const loaderDiv = document.querySelector('#loader');
 const resultsDiv = document.querySelector('#results');
 const resultsWrapper = document.querySelector('#resultsWrapper');
 const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
+const autoCompleteOption = document.createElement('div');
+const singleStockOption = document.querySelector('.singleStockOption');
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
 const AUTOCOMPLETE_URL =
   'http://localhost:8080/api/stocks/get-autocomplete-values/';
@@ -17,8 +17,12 @@ submitButton.disabled = true;
 
 // Listener for adding text to input field - calls autocomplete method
 stockSymbolInput.addEventListener('keyup', (e) => {
-  checkForInputValue();
-  autoCompleteHandler(e);
+  if (e.keyCode === 8 || e.keyCode === 46) {
+    clearAutoComplete();
+  } else {
+    checkForInputValue();
+    autoCompleteHandler(e);
+  }
 });
 
 autoCompleteHandler = async (event) => {
@@ -105,24 +109,45 @@ showResultsDisplay = (requestedData) => {
   }
 };
 
+// Shows options for autocomplete
 showAutoCompleteOptions = (responseData) => {
   const autoCompleteData = responseData;
   if (!autoCompleteData.success) {
     return;
   } else {
+    autoCompleteWrapper.style.display = 'block';
     // make list dynamically
-    // overwrite current list
-    // click on symbol makes that the option
-    /**
-     * convertedKeys.map((item) => {
-//       const option = document.createElement('div');
-//       option.innerText = item.name;
-//       huge_list.appendChild(option);
-//       if (huge_list.childNodes.length > 0) {
-//         huge_list.removeChild(option);
-//       }
-//       huge_list.appendChild(option);
-//     });
-     */
+    if (autoCompleteWrapper.childNodes.length > 0) {
+      autoCompleteWrapper.innerHTML = '';
+      autoCompleteData.data.forEach((item) => {
+        let singleOption = document.createElement('div');
+        singleOption.className = 'singleStockOption';
+        singleOption.innerText = `Name: ${item.name} | Stock Symbol - ${item.symbol}`;
+        autoCompleteWrapper.appendChild(singleOption);
+      });
+    } else {
+      autoCompleteData.data.forEach((item) => {
+        let singleOption = document.createElement('div');
+        singleOption.className = 'singleStockOption';
+        singleOption.innerText = `Name: ${item.name} | Stock Symbol - ${item.symbol}`;
+        autoCompleteWrapper.appendChild(singleOption);
+      });
+    }
   }
 };
+
+// Clears auto complete
+clearAutoComplete = () => {
+  autoCompleteWrapper.innerHTML = '';
+  autoCompleteWrapper.style.display = 'none';
+};
+
+// Get stock symbol when clicking on autocomplete option
+document.body.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (e.srcElement.className === 'singleStockOption') {
+    stockSymbolInput.value = e.srcElement.innerText.split('-')[1].trim();
+  } else {
+    autoCompleteWrapper.style.display = 'none';
+  }
+});
