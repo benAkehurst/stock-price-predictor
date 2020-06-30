@@ -50,11 +50,31 @@ body {
 }
 
 #autoCompleteWrapper {
-  width: 65%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 15rem;
+  padding: 1rem;
+  overflow: scroll;
   margin: -7px 0 1rem 0;
   box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.2);
   display: none;
+  animation: 300ms ease-in 0s 1 slideInFromLeft;
+}
+
+#autoCompleteWrapper > div:hover {
+  cursor: pointer;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateY(-25%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 #loader,
