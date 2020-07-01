@@ -4,6 +4,8 @@ A project to start learning about machine learning in Javascript. Utilizing the 
 
 The aim of the server will take a stock symbol, pull the last 100 days of stock data from Alphavantage then make a prediction on what the stock price will be today! We also save each prediction in a database to make checking if the predictions came true.
 
+I also wanted to use this project as an opportunity to work with Server Side Rendering of a client app. I chose Pug as a template engine and run all the basic functionality of the client though vanilla Javascript. All the client side files can be found in the `public` and `views` folders.
+
 ## Prerequisites
 
 - A MongoDB instance running
