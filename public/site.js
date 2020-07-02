@@ -9,6 +9,7 @@ const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
 const autoCompleteOption = document.createElement('div');
 const singleStockOption = document.querySelector('.singleStockOption');
 const getHistoryButton = document.querySelector('#getHistoryButton');
+const historyResults = document.querySelector('#historyResults');
 
 // API Urls
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
@@ -81,6 +82,7 @@ getAutocompleteValues = async (url) => {
   showAutoCompleteOptions(request);
 };
 
+// Get and show the history of predictions
 getPredictionHistoryHandler = async (url) => {
   let request = await fetch(url, { method: 'GET' })
     .then((response) => {
@@ -91,7 +93,18 @@ getPredictionHistoryHandler = async (url) => {
       hideLoaderHandler();
       return { error: error, message: 'Failed to get prediction' };
     });
-  console.log('request: ', request);
+  request.data.map((item) => {
+    const singleItem = document.createElement('div');
+    singleItem.innerText = `
+      Stock Symbol - ${item.stockSymbol}
+      Initial request date - ${item.createdAt}
+      Predictions: Open - ${item.data[0].open.toFixed(2)}
+      Predictions: High - ${item.data[0].high.toFixed(2)}
+      Predictions: Low - ${item.data[0].low.toFixed(2)}
+      Predictions: Close - ${item.data[0].close.toFixed(2)}
+    `;
+    historyResults.appendChild(singleItem);
+  });
 };
 
 // Loader Handlers
