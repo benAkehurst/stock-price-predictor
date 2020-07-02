@@ -8,9 +8,13 @@ const resultsWrapper = document.querySelector('#resultsWrapper');
 const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
 const autoCompleteOption = document.createElement('div');
 const singleStockOption = document.querySelector('.singleStockOption');
+const getHistoryButton = document.querySelector('#getHistoryButton');
+
+// API Urls
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
 const AUTOCOMPLETE_URL =
   'http://localhost:8080/api/stocks/get-autocomplete-values/';
+const HISTORY_URL = 'http://localhost:8080/api/stocks/get-all-predictions/';
 
 // Set submit button to disabled on init
 submitButton.disabled = true;
@@ -23,6 +27,11 @@ stockSymbolInput.addEventListener('keyup', (e) => {
     checkForInputValue();
     autoCompleteHandler(e);
   }
+});
+
+// Event Listener for prediction history
+getHistoryButton.addEventListener('click', () => {
+  getPredictionHistoryHandler(HISTORY_URL);
 });
 
 autoCompleteHandler = async (event) => {
@@ -70,6 +79,19 @@ getAutocompleteValues = async (url) => {
       return { error: error, message: 'Failed to get autocomplete options' };
     });
   showAutoCompleteOptions(request);
+};
+
+getPredictionHistoryHandler = async (url) => {
+  let request = await fetch(url, { method: 'GET' })
+    .then((response) => {
+      hideLoaderHandler();
+      return response.json();
+    })
+    .catch((error) => {
+      hideLoaderHandler();
+      return { error: error, message: 'Failed to get prediction' };
+    });
+  console.log('request: ', request);
 };
 
 // Loader Handlers
