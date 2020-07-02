@@ -81,3 +81,30 @@ exports.get_autocomplete_options = async (req, res) => {
     });
   }
 };
+
+/**
+ * Gets all the predictions
+ * GET
+ */
+exports.get_all_predictions = async (req, res) => {
+  let predictions = await Stock.find({}, (err, predictions) => {
+    if (err) {
+      return err;
+    } else {
+      return predictions;
+    }
+  });
+  if (!predictions) {
+    res.status(404).json({
+      success: false,
+      message: 'Failed to get all predictions',
+      data: null,
+    });
+  } else {
+    res.status(200).json({
+      success: true,
+      message: 'Predictions found successfully',
+      data: predictions,
+    });
+  }
+};

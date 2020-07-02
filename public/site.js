@@ -8,9 +8,14 @@ const resultsWrapper = document.querySelector('#resultsWrapper');
 const autoCompleteWrapper = document.querySelector('#autoCompleteWrapper');
 const autoCompleteOption = document.createElement('div');
 const singleStockOption = document.querySelector('.singleStockOption');
+const getHistoryButton = document.querySelector('#getHistoryButton');
+const historyResults = document.querySelector('#historyResults');
+
+// API Urls
 const REQUEST_URL = 'http://localhost:8080/api/stocks/get-stock-prediction/';
 const AUTOCOMPLETE_URL =
   'http://localhost:8080/api/stocks/get-autocomplete-values/';
+const HISTORY_URL = 'http://localhost:8080/api/stocks/get-all-predictions/';
 
 // Set submit button to disabled on init
 submitButton.disabled = true;
@@ -23,6 +28,11 @@ stockSymbolInput.addEventListener('keyup', (e) => {
     checkForInputValue();
     autoCompleteHandler(e);
   }
+});
+
+// Event Listener for prediction history
+getHistoryButton.addEventListener('click', () => {
+  getPredictionHistoryHandler(HISTORY_URL);
 });
 
 autoCompleteHandler = async (event) => {
@@ -70,6 +80,31 @@ getAutocompleteValues = async (url) => {
       return { error: error, message: 'Failed to get autocomplete options' };
     });
   showAutoCompleteOptions(request);
+};
+
+// Get and show the history of predictions
+getPredictionHistoryHandler = async (url) => {
+  let request = await fetch(url, { method: 'GET' })
+    .then((response) => {
+      hideLoaderHandler();
+      return response.json();
+    })
+    .catch((error) => {
+      hideLoaderHandler();
+      return { error: error, message: 'Failed to get prediction' };
+    });
+  request.data.map((item) => {
+    const singleItem = document.createElement('div');
+    singleItem.innerText = `
+      Stock Symbol - ${item.stockSymbol}
+      Initial request date - ${item.createdAt}
+      Predictions: Open - ${item.data[0].open.toFixed(2)}
+      Predictions: High - ${item.data[0].high.toFixed(2)}
+      Predictions: Low - ${item.data[0].low.toFixed(2)}
+      Predictions: Close - ${item.data[0].close.toFixed(2)}
+    `;
+    historyResults.appendChild(singleItem);
+  });
 };
 
 // Loader Handlers
