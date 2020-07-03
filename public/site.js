@@ -95,16 +95,26 @@ getPredictionHistoryHandler = async (url) => {
     });
   request.data.map((item) => {
     const singleItem = document.createElement('div');
-    singleItem.innerText = `
-      Stock Symbol - ${item.stockSymbol}
-      Initial request date - ${item.createdAt}
-      Predictions: Open - ${item.data[0].open.toFixed(2)}
-      Predictions: High - ${item.data[0].high.toFixed(2)}
-      Predictions: Low - ${item.data[0].low.toFixed(2)}
-      Predictions: Close - ${item.data[0].close.toFixed(2)}
+    singleItem.innerHTML = `
+    <div class="predictionItem">
+      <button class="btn-primary" onclick=compareResultHandler(\"${
+        item._id
+      }\")>Check Prediction</button>
+      <p>Stock Symbol - ${item.stockSymbol}</p>
+      <p>Initial request date - ${item.createdAt}</p>
+      <p>Predictions: Open - ${item.data[0].open.toFixed(2)}</p>
+      <p>Predictions: High - ${item.data[0].high.toFixed(2)}</p>
+      <p>Predictions: Low - ${item.data[0].low.toFixed(2)}</p>
+      <p>Predictions: Close - ${item.data[0].close.toFixed(2)}</p>
+    </div>
     `;
     historyResults.appendChild(singleItem);
   });
+};
+
+// Handler to compare results or prediction and actual outcome
+compareResultHandler = (predictionId) => {
+  console.log('predictionId: ', predictionId);
 };
 
 // Loader Handlers
