@@ -108,3 +108,28 @@ exports.get_all_predictions = async (req, res) => {
     });
   }
 };
+
+/**
+ * Compares prediction
+ * GET
+ */
+exports.compare_prediction_and_result = async (req, res) => {
+  const predictionId = req.params.predictionId;
+  let prediction = await Stock.findById(predictionId, (err, item) => {
+    if (err) {
+      return err;
+    } else {
+      return item;
+    }
+  });
+
+  if (!prediction) {
+    res.status(404).json({
+      success: false,
+      message: 'Failed to get prediction comparison',
+      data: null,
+    });
+  } else {
+    // here i need to call the api to get the data from the single day and compare results
+  }
+};

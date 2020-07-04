@@ -12,4 +12,8 @@ module.exports = (app) => {
   app
     .route('/api/stocks/get-all-predictions/')
     .get(stocksController.get_all_predictions);
+
+  app
+    .route('/api/stocks/compare-prediction-and-result/:predictionId')
+    .get(stocksController.compare_prediction_and_result);
 };
