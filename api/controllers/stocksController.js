@@ -124,10 +124,21 @@ exports.compare_prediction_and_result = async (req, res) => {
       data: null,
     });
   } else {
-    // here i need to call the api to get the data from the single day and compare results
     const rawData = await fetchRawData(prediction.stockSymbol);
-    console.log('rawData: ', rawData);
-    res.status(200).json({ data: rawData });
+    const outcome = await tools.convertDataForComparison(
+      rawData,
+      prediction.createdAt
+    );
+    const resObj = {
+      symbol: prediction.stockSymbol,
+      prediction: prediction.data,
+      actualOutcome: outcome[0].data,
+    };
+    res.status(200).json({
+      success: true,
+      message: 'Comparison made successfully',
+      data: resObj,
+    });
   }
 };
 

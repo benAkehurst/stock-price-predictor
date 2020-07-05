@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 exports.dataConverter = async (rawData) => {
   // Extract only stock data
   const timeSeriesData = rawData['Time Series (Daily)'];
@@ -39,4 +41,15 @@ exports.autoCompleteConverter = async (rawData) => {
     })
   );
   return convertedKeys;
+};
+
+exports.convertDataForComparison = async (rawData, time) => {
+  const formattedTime = moment(time).format('yyyy-MM-DD');
+  const timeSeriesData = rawData['Time Series (Daily)'];
+  const convertedArray = Object.entries(timeSeriesData).map((e) => ({
+    date: e[0],
+    data: e[1],
+  }));
+  const match = convertedArray.filter((item) => item.date === formattedTime);
+  return match;
 };
