@@ -14,13 +14,7 @@ exports.get_stock_prediction = async (req, res) => {
   const stock = req.params.stock;
 
   // Fetches Raw Stock Data
-  const rawData = await fetch(
-    `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stock}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      return data;
-    });
+  const rawData = await fetchRawData(stock);
 
   // Converts Data for Brain.js
   const convertedData = await tools.dataConverter(rawData);
@@ -130,6 +124,30 @@ exports.compare_prediction_and_result = async (req, res) => {
       data: null,
     });
   } else {
-    // here i need to call the api to get the data from the single day and compare results
+    const rawData = await fetchRawData(prediction.stockSymbol);
+    const outcome = await tools.convertDataForComparison(
+      rawData,
+      prediction.createdAt
+    );
+    const resObj = {
+      symbol: prediction.stockSymbol,
+      prediction: prediction.data,
+      actualOutcome: outcome[0].data,
+    };
+    res.status(200).json({
+      success: true,
+      message: 'Comparison made successfully',
+      data: resObj,
+    });
   }
 };
+
+async function fetchRawData(stockSymbol) {
+  return await fetch(
+    `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    });
+}
