@@ -129,7 +129,7 @@ exports.compare_prediction_and_result = async (req, res) => {
       rawData,
       prediction.createdAt
     );
-    const resObj = {
+    const stockComparisonData = {
       symbol: prediction.stockSymbol,
       prediction: prediction.data,
       actualOutcome: outcome[0].data,
@@ -137,7 +137,7 @@ exports.compare_prediction_and_result = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Comparison made successfully',
-      data: resObj,
+      data: stockComparisonData,
     });
   }
 };
