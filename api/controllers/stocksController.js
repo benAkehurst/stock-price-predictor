@@ -104,7 +104,7 @@ exports.get_all_predictions = async (req, res) => {
 };
 
 /**
- * Compares prediction
+ * Compares prediction and actual outcome on day of prediction
  * GET
  */
 exports.compare_prediction_and_result = async (req, res) => {
