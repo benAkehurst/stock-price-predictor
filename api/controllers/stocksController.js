@@ -1,7 +1,7 @@
 'use strict';
 const mongoose = require('mongoose');
 const Stock = mongoose.model('Stock');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const predictors = require('../../middlewares/predictors');
 const tools = require('../../middlewares/tools');
 
@@ -52,12 +52,13 @@ exports.get_autocomplete_options = async (req, res) => {
   const searchValue = req.params.searchValue;
 
   // Fetches Raw Stock Data
-  const rawData = await fetch(
-    `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchValue}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
-  )
-    .then((response) => response.json())
+  const rawData = await axios
+    .get(
+      `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchValue}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
+    )
+    // .then((response) => response.json())
     .then((data) => {
-      return data;
+      return data.data;
     });
 
   const convertedData = await tools.autoCompleteConverter(rawData);
@@ -143,11 +144,13 @@ exports.compare_prediction_and_result = async (req, res) => {
 };
 
 async function fetchRawData(stockSymbol) {
-  return await fetch(
-    `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
-  )
-    .then((response) => response.json())
+  return await axios
+    .get(
+      `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
+    )
+    // .then((response) => response.json())
     .then((data) => {
-      return data;
+      console.log('data: ', data);
+      return data.data;
     });
 }
