@@ -15,28 +15,18 @@ const app = express();
 require('dotenv').config();
 
 // DB Connection
-mongoose.Promise = global.Promise;
-mongoose.connect(
-  // `mongodb://${process.env.DB_CONNECT}`,
-  `mongodb://localhost:27017/stock_prices_db`,
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  },
-  (e) => {
-    if (e) {
-      const dbError = {
-        error: e,
-        msg: 'Error Connecting to Database. Please check MongoDB is running',
-      };
-      console.log(dbError);
-    } else {
-      console.log('Connected to Database');
-    }
-  }
-);
+mongoose
+  .connect(
+    process.env.DB_HOST,
+    () => {
+      console.log(`Connected to MongoDB Successfully`);
+    },
+    { useNewUrlParser: true },
+    { useUnifiedTopology: true }
+  )
+  .catch((err) => {
+    console.log(err);
+  });
 
 // Server Config
 app.use(bodyParser.urlencoded({ extended: true }));

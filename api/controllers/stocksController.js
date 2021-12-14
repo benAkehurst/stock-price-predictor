@@ -56,7 +56,6 @@ exports.get_autocomplete_options = async (req, res) => {
     .get(
       `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchValue}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
     )
-    // .then((response) => response.json())
     .then((data) => {
       return data.data;
     });
@@ -148,9 +147,7 @@ async function fetchRawData(stockSymbol) {
     .get(
       `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${stockSymbol}&apikey=${process.env.ALPHA_VANTAGE_KEY}&datatype=json`
     )
-    // .then((response) => response.json())
     .then((data) => {
-      console.log('data: ', data);
       return data.data;
     });
 }
